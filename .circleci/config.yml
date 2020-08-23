@@ -10,7 +10,13 @@ jobs:
       - run: apk add docker-cli
       - run: docker build -f Dockerfile -t your_project:$CIRCLE_BRANCH .
       - run: mkdir -p docker-cache
-      - run: docker save -o docker-cache/image.zip your_project:$CIRCLE_BRANCH 
+      - run: docker save -o docker-cache/image.zip your_project:$CIRCLE_BRANCH
+    test:
+      docker:
+        - image: circleci/node
+      steps:
+        - checkout
+        - run: echo "HERE"
   deploy:
     docker:
       - image: circleci/node
