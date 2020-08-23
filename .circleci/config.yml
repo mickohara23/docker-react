@@ -1,7 +1,36 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
+
+# Define the jobs we want to run for this project
+jobs:
+  build:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - run: apk add docker-cli
+      - run: docker build -f Dockerfile -t your_project:$CIRCLE_BRANCH .
+      - run: mkdir -p docker-cache
+      - run: docker save -o docker-cache/image.zip your_project:$CIRCLE_BRANCH 
+  deploy:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - run: scp docker-cache/image.zip acs@app.smartbooks365.com:/home/acs
+
+# Orchestrate our job run sequence
 workflows:
-  node-tests:
+  build_and_test:
     jobs:
-      - node/test
+      - build
+      - test:
+          requires:
+            - build
+      - hold:
+          type: approval
+          requires:
+            - build
+            - test
+      - deploy:
+          requires:
+            - hold
