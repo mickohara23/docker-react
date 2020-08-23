@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.13-alpine
+      - image: circleci/postgres:alpine
     steps:
       - checkout
       - run: apk add docker-cli
@@ -13,13 +13,13 @@ jobs:
       - run: docker save -o docker-cache/image.zip your_project:$CIRCLE_BRANCH
   test:
     docker:
-      - image: circleci/golang:1.13-alpine
+      - image: circleci/postgres:alpine
     steps:
       - checkout
       - run: echo "HERE"
   deploy:
     docker:
-      - image: circleci/golang:1.13-alpine
+      - image: circleci/postgres:alpine
     steps:
       - checkout
       - run: scp docker-cache/image.zip acs@app.smartbooks365.com:/home/acs
