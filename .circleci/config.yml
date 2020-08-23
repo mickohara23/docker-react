@@ -7,6 +7,7 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - checkout
+      - setup_remote_docker
       - run: docker build -f Dockerfile -t your_project:$CIRCLE_BRANCH .
       - run: mkdir -p docker-cache
       - run: docker save -o docker-cache/image.zip your_project:$CIRCLE_BRANCH
