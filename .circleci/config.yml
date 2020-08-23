@@ -7,6 +7,7 @@ jobs:
       - image: circleci/postgres:alpine
     steps:
       - checkout
+      - run: apk add docker
       - run: apk add docker-cli
       - run: docker build -f Dockerfile -t your_project:$CIRCLE_BRANCH .
       - run: mkdir -p docker-cache
